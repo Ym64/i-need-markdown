@@ -59,6 +59,18 @@ export class Tokenizer {
 
         for (const line of this.lines) {
 
+            // Line: ---
+            if (line.trim().match("---")) {
+                this.flushAll();
+
+                this.tokens.push({
+                    type: "HORIZONTAL_RULE",
+                });
+
+                continue;
+            }
+
+
 
             // Header: h1 - h6
             const headerMatch = line.match(/^(#{1,6})\s+(.*)$/);
@@ -73,7 +85,6 @@ export class Tokenizer {
 
                 continue;
             }
-
 
 
             // Unordered list: "- something" or "* something"

@@ -18,6 +18,17 @@ export class InlineTokenizer {
                 continue;
             }
 
+            const underlineMatch = remaining.match(/^__(.*?)__/);
+            if (underlineMatch) {
+                tokens.push({
+                    type: "UNDERLINE",
+                    children: this.tokenize(underlineMatch[1])
+                });
+
+                remaining = remaining.slice(underlineMatch[0].length);
+                continue;
+            }
+
             const italicMatch = remaining.match(/^(?:\*(.*?)\*|_(.*?)_)/);
             if (italicMatch) {
                 tokens.push({
@@ -29,6 +40,17 @@ export class InlineTokenizer {
                 continue;
             }
 
+            const strikeThroughMatch = remaining.match(/^~~(.*?)~~/);
+            if (strikeThroughMatch) {
+                tokens.push({
+                    type: "STRIKE_THROUGH",
+                    children: this.tokenize(strikeThroughMatch[1])
+                });
+
+                remaining = remaining.slice(strikeThroughMatch[0].length);
+                continue;
+            }
+
             const codeMatch = remaining.match(/^`(.*?)`/);
             if (codeMatch) {
                 tokens.push({
@@ -37,6 +59,33 @@ export class InlineTokenizer {
                 });
 
                 remaining = remaining.slice(codeMatch[0].length);
+                continue;
+            }
+
+            const hyperlinkMatch = remaining.match(/^\[(.*)]\((.*)\)/);
+            if (hyperlinkMatch) {
+                tokens.push({
+                    type: "HYPERLINK",
+                    link: hyperlinkMatch[2],
+                    children: this.tokenize(hyperlinkMatch[1])
+                });
+
+                remaining = remaining.slice(hyperlinkMatch[0].length);
+                continue;
+            }
+
+            const linkMatch = remaining.match(/^(https?:\/\/\S+|www\.\S+)/);
+            if (linkMatch) {
+                tokens.push({
+                    type: "HYPERLINK",
+                    link: linkMatch[0],
+                    children: [{
+                        type: "TEXT",
+                        value: linkMatch[0]
+                    }]
+                });
+
+                remaining = remaining.slice(linkMatch[0].length);
                 continue;
             }
 

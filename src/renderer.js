@@ -24,6 +24,18 @@ export class Renderer {
             case "ITALIC":
                 return `<i>${node.children.map(c => this.render(c)).join("")}</i>`
 
+            case "UNDERLINE":
+                return `<u>${node.children.map(c => this.render(c)).join("")}</u>`
+
+            case "STRIKE_THROUGH":
+                return `<s>${node.children.map(c => this.render(c)).join("")}</s>`
+
+            case "HORIZONTAL_RULE":
+                return `<hr>`
+
+            case "HYPERLINK":
+                return `<a href="${node.link}">${node.children.map(c => this.render(c)).join("")}</a>`
+
             case "INLINE_CODE":
                 return `<span class="inline-code">${node.value}</span>`
 

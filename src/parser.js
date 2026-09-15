@@ -47,6 +47,11 @@ export class Parser {
                     }))
                 };
 
+            case "HORIZONTAL_RULE":
+                return {
+                    type: "HORIZONTAL_RULE"
+                }
+
             default:
                 throw new Error(`Unknown token type: ${token.type}`);
         }
