@@ -1,4 +1,8 @@
+import {InlineTokenizer} from "./inline_tokenizer.js";
+
 export class Parser {
+
+    inlineTokenizer = new InlineTokenizer();
 
     parse(tokens) {
         return {
@@ -15,23 +19,13 @@ export class Parser {
                 return {
                     type: "HEADER",
                     level: token.level,
-                    children: [
-                        {
-                            type: "TEXT",
-                            value: token.text
-                        }
-                    ]
+                    children: this.inlineTokenizer.tokenize(token.text)
                 };
 
             case "PARAGRAPH":
                 return {
                     type: "PARAGRAPH",
-                    children: [
-                        {
-                            type: "TEXT",
-                            value: token.lines.join(" ")
-                        }
-                    ]
+                    children: this.inlineTokenizer.tokenize(token.lines.join(" "))
                 };
 
             case "UNORDERED":
@@ -39,12 +33,7 @@ export class Parser {
                     type: "UNORDERED_LIST",
                     children: token.items.map(item => ({
                         type: "LIST_ITEM",
-                        children: [
-                            {
-                                type: "TEXT",
-                                value: item
-                            }
-                        ]
+                        children: this.inlineTokenizer.tokenize(item)
                     }))
                 };
 
@@ -54,12 +43,7 @@ export class Parser {
                     start: token.start,
                     children: token.items.map(item => ({
                         type: "LIST_ITEM",
-                        children: [
-                            {
-                                type: "TEXT",
-                                value: item
-                            }
-                        ]
+                        children: this.inlineTokenizer.tokenize(item)
                     }))
                 };
 

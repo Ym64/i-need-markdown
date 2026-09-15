@@ -18,6 +18,15 @@ export class Renderer {
             case "TEXT":
                 return node.value;
 
+            case "BOLD":
+                return `<strong>${node.children.map(c => this.render(c)).join("")}</strong>`
+
+            case "ITALIC":
+                return `<i>${node.children.map(c => this.render(c)).join("")}</i>`
+
+            case "INLINE_CODE":
+                return `<span class="inline-code">${node.value}</span>`
+
             case "UNORDERED_LIST":
                 return `<ul>\n${node.children.map(c => this.render(c)).join("\n")}\n</ul>`;
 
