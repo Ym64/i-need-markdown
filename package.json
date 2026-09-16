@@ -4,9 +4,6 @@
   "description": "A lightweight tool which turns markdown into html.",
   "main": "index.js",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "exports": {
     ".": "./src/index.js"
   },
@@ -29,6 +26,6 @@
   "bugs": {
     "url": "https://github.com/Ym64/i-need-markdown/issues"
   },
-  "author": "ymanu",
+  "author": "Ymanu",
   "license": "ISC"
 }
