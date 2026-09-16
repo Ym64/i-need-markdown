@@ -1,7 +1,7 @@
 {
   "name": "i-need-markdown",
   "version": "1.0.0",
-  "description": "",
+  "description": "A lightweight tool which turns markdown into html.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,25 @@
   "exports": {
     ".": "./src/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "markdown",
+    "parser",
+    "html",
+    "javascript",
+    "markdown-parser",
+    "markdown-to-html"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ym64/i-need-markdown.git"
+  },
+  "homepage": "https://inmd-viewer.m64.dev/",
+  "bugs": {
+    "url": "https://github.com/Ym64/i-need-markdown/issues"
+  },
+  "author": "ymanu",
   "license": "ISC"
 }
