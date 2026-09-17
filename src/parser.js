@@ -1,8 +1,8 @@
-import {InlineTokenizer} from "./inline_tokenizer.js";
+import { InlineParser } from "./inline_parser.js";
 
 export class Parser {
 
-    inlineTokenizer = new InlineTokenizer();
+    inlineParser = new InlineParser();
 
     parse(tokens) {
         return {
@@ -19,13 +19,13 @@ export class Parser {
                 return {
                     type: "HEADER",
                     level: token.level,
-                    children: this.inlineTokenizer.tokenize(token.text)
+                    children: this.inlineParser.parse(token.text)
                 };
 
             case "PARAGRAPH":
                 return {
                     type: "PARAGRAPH",
-                    children: this.inlineTokenizer.tokenize(token.lines.join(" "))
+                    children: this.inlineParser.parse(token.lines.join(" "))
                 };
 
             case "UNORDERED":
@@ -33,7 +33,7 @@ export class Parser {
                     type: "UNORDERED_LIST",
                     children: token.items.map(item => ({
                         type: "LIST_ITEM",
-                        children: this.inlineTokenizer.tokenize(item)
+                        children: this.inlineParser.parse(item)
                     }))
                 };
 
@@ -43,7 +43,7 @@ export class Parser {
                     start: token.start,
                     children: token.items.map(item => ({
                         type: "LIST_ITEM",
-                        children: this.inlineTokenizer.tokenize(item)
+                        children: this.inlineParser.parse(item)
                     }))
                 };
 

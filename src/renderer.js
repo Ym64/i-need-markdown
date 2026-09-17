@@ -32,7 +32,10 @@ export class Renderer {
                 return `<hr class="inmd-horizontal-rule">`
 
             case "HYPERLINK":
-                return `<a class="inmd-hyperlink" href="${node.link}">${node.children.map(c => this.render(c)).join("")}</a>`
+                return `<a class="inmd-hyperlink" href="${node.isMail ? "mailto:" + node.link : node.link}">${node.children.map(c => this.render(c)).join("")}${node.title ? ` title="${node.title}"` : ""}</a>`
+
+            case "IMAGE":
+                return `<img src="${node.src}" alt="${node.alt}"${node.title ? ` title="${node.title}"` : ""}>`;
 
             case "INLINE_CODE":
                 return `<code class="inmd-inline-code">${node.value}</code>`
