@@ -6,6 +6,11 @@
 
     <link href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/styles/dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/languages/go.min.js"></script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -194,7 +199,8 @@
 <div class="header">
     <h2>I Need Markdown – Viewer</h2>
     <div class="buttons">
-        <a class="icon" href="https://github.com/Ym64/i-need-markdown" target="_blank"><i class="devicon-github-original"></i></a>
+        <a class="icon" href="https://github.com/Ym64/i-need-markdown" target="_blank"><i
+                class="devicon-github-original"></i></a>
         <button id="theme-toggle">️☀️ Light Mode</button>
     </div>
 </div>
@@ -202,7 +208,7 @@
     <div class="input-container">
         <h3>Markdown Input</h3>
         <label for="markdown-input"></label><textarea id="markdown-input">
-# Hello World
+# Hello World ![test image](https://img.shields.io/badge/just%20the%20message-8A2BE2)
 
 This is a paragraph.
 
@@ -224,15 +230,23 @@ You can als use **bold**, _italic_, ~~strike through~~ or __underline__ text!
 
 Heck you can even **_`combine`_** all of them!
 
-Oh yeah, [links](https://ymanu.dev) work too! https://google.com/
-</textarea>
+Oh yeah, [links](https://ymanu.dev) and [mails](me@ymanu.dev) work too! Even automatically: https://ymanu.dev/
+
+
+
+Code blocks also exist:
+```javascript
+function gekoloniseerd() {
+    console.log("Hello World!");
+}
+```
+**Please note** that this viewer uses [highlight.js](https://highlightjs.org/) for syntax highlighting.</textarea>
     </div>
 
     <div class="output-container">
 
         <div class="output-preview">
-            <h3>Preview:</h3>
-            <hr>
+            <h3>Preview</h3>
             <div id="preview"></div>
         </div>
 
@@ -247,7 +261,7 @@ Oh yeah, [links](https://ymanu.dev) work too! https://google.com/
 
 <script type="module">
 
-    import { parse } from "https://esm.sh/i-need-markdown";
+    import {parse} from "https://esm.sh/i-need-markdown";
 
     const input = document.getElementById("markdown-input");
     const preview = document.getElementById("preview");
@@ -260,6 +274,10 @@ Oh yeah, [links](https://ymanu.dev) work too! https://google.com/
 
         preview.innerHTML = html;
         htmlOutput.textContent = html;
+
+        preview.querySelectorAll("pre code").forEach(codeElement => {
+            hljs.highlightElement(codeElement);
+        })
     }
 
     input.addEventListener("input", render);
@@ -269,15 +287,15 @@ Oh yeah, [links](https://ymanu.dev) work too! https://google.com/
     const themeButton = document.getElementById("theme-toggle");
 
     themeButton.addEventListener("click", () => {
-       const current = document.documentElement.getAttribute("data-theme");
+        const current = document.documentElement.getAttribute("data-theme");
 
-       if (current === "light") {
-           document.documentElement.removeAttribute("data-theme"); // default to dark theme
-           themeButton.textContent = "☀️ Light Mode"
-       } else {
-           document.documentElement.setAttribute("data-theme", "light");
-           themeButton.textContent = "🌙 Dark Mode"
-       }
+        if (current === "light") {
+            document.documentElement.removeAttribute("data-theme"); // default to dark theme
+            themeButton.textContent = "☀️ Light Mode"
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+            themeButton.textContent = "🌙 Dark Mode"
+        }
 
     });
 
