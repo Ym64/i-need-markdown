@@ -45,10 +45,7 @@ For an example of how it can be used on a webpage, check the [markdown viewer](h
   - Underline
   - Strike through
 - Inline code
+- Code blocks
 - Hyperlinks (including emails)
 - Images
-
-## To-do
-This project isn't finished yet, there're still some markdown features that need to be implemented.
-- [ ] Blockquotes
-- [ ] Code blocks
+- Blockquotes
