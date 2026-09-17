@@ -38,7 +38,10 @@ export class Renderer {
                 return `<img src="${node.src}" alt="${node.alt}"${node.title ? ` title="${node.title}"` : ""}>`;
 
             case "INLINE_CODE":
-                return `<code class="inmd-inline-code">${node.value}</code>`
+                return `<code class="inmd-inline-code">${this.escapeHtml(node.value)}</code>`
+
+            case "CODE_BLOCK":
+                return `<pre class="inmd-code-block"><code class="${node.language ? `language-${this.escapeHtml(node.language)}` : ""}">${node.lines.map(l => this.escapeHtml(l)).join("\n")}</code></pre>`
 
             case "UNORDERED_LIST":
                 return `<ul class="inmd-unordered-list">\n    ${node.children.map(c => this.render(c)).join("\n    ")}\n    </ul>`;
@@ -53,6 +56,15 @@ export class Renderer {
                 throw new Error(`Unknown node type: ${node.type}`);
         }
 
+    }
+
+    escapeHtml(text) {
+        return String(text)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
     }
 
 }

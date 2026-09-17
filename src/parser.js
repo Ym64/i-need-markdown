@@ -50,7 +50,14 @@ export class Parser {
             case "HORIZONTAL_RULE":
                 return {
                     type: "HORIZONTAL_RULE"
-                }
+                };
+
+            case "CODE_BLOCK":
+                return {
+                    type: "CODE_BLOCK",
+                    language: token.language,
+                    lines: token.lines
+                };
 
             default:
                 throw new Error(`Unknown token type: ${token.type}`);

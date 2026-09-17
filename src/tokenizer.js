@@ -51,6 +51,20 @@ export class Tokenizer {
         }
     }
 
+    flushCodeBlock() {
+        if (this.inCodeBlock) {
+            this.tokens.push({
+                type: "CODE_BLOCK",
+                language: this.language,
+                lines: this.codeLines
+            });
+
+            this.inCodeBlock = false;
+            this.codeLines = [];
+            this.language = null;
+        }
+    }
+
     tokenize(markdown) {
 
         this.reset();
@@ -58,6 +72,31 @@ export class Tokenizer {
         this.lines = markdown.split("\n");
 
         for (const line of this.lines) {
+
+            if (this.inCodeBlock) {
+                // Code block end: ```
+                if (line.trim() === "```") {
+                    this.flushCodeBlock();
+                }
+
+                // Default code line
+                else {
+                    this.codeLines.push(line);
+                }
+
+                continue;
+            }
+
+            // Code block start: ```<lang>
+            const codeBlockMatch = line.trim().match(/^```([A-Za-z0-9_+-]*)\s*$/);
+            if (codeBlockMatch) {
+                this.flushAll();
+
+                this.inCodeBlock = true;
+                this.language = codeBlockMatch[1];
+                continue;
+            }
+
 
             // Line: ---
             if (line.trim().match("---")) {
@@ -129,8 +168,11 @@ export class Tokenizer {
             this.paragraphLines.push(line);
         }
 
-        this.flushParagraph();
-        this.flushList()
+        if (this.inCodeBlock) {
+            this.flushCodeBlock();
+        }
+
+        this.flushAll()
         return this.tokens;
     }
 
