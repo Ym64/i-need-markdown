@@ -165,7 +165,7 @@ export class InlineParser {
     }
 
     parseDoubleDelimited(delimiter, type1, type2) {
-        const content = this.delimitedContent(delimiter);
+        const content = this.consumeDelimitedContent(delimiter);
         if (content === null) return null;
 
         return {

@@ -43,6 +43,9 @@ export class Renderer {
             case "CODE_BLOCK":
                 return `<pre class="inmd-code-block"><code class="${node.language ? `language-${this.escapeHtml(node.language)}` : ""}">${node.lines.map(l => this.escapeHtml(l)).join("\n")}</code></pre>`
 
+            case "BLOCK_QUOTE":
+                return `<blockquote class="inmd-blockquote">\n    ${node.children.map(c => this.render(c)).join("\n    ")}\n</blockquote>`
+
             case "UNORDERED_LIST":
                 return `<ul class="inmd-unordered-list">\n    ${node.children.map(c => this.render(c)).join("\n    ")}\n    </ul>`;
 

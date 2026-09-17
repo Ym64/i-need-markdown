@@ -3,7 +3,9 @@ export class Tokenizer {
     reset() {
         this.tokens = [];
 
-        this.paragraphLines = []
+        this.paragraphLines = [];
+
+        this.quoteLines = [];
 
         this.inCodeBlock = false;
         this.codeLines = [];
@@ -18,6 +20,7 @@ export class Tokenizer {
     flushAll() {
         this.flushParagraph();
         this.flushList();
+        this.flushBlockquote();
     }
 
     flushParagraph() {
@@ -28,6 +31,17 @@ export class Tokenizer {
             });
 
             this.paragraphLines = [];
+        }
+    }
+
+    flushBlockquote() {
+        if (this.quoteLines.length > 0) {
+            this.tokens.push({
+                type: "BLOCK_QUOTE",
+                lines: this.quoteLines
+            });
+
+            this.quoteLines = [];
         }
     }
 
@@ -87,6 +101,7 @@ export class Tokenizer {
                 continue;
             }
 
+
             // Code block start: ```<lang>
             const codeBlockMatch = line.trim().match(/^```([A-Za-z0-9_+-]*)\s*$/);
             if (codeBlockMatch) {
@@ -96,6 +111,19 @@ export class Tokenizer {
                 this.language = codeBlockMatch[1];
                 continue;
             }
+
+
+            // Blockquote
+            const blockQuoteMatch = line.match(/^ {0,3}>\s?(.*)$/);
+            if (blockQuoteMatch) {
+                this.flushParagraph();
+                this.flushList();
+
+                this.quoteLines.push(blockQuoteMatch[1]);
+                continue;
+            }
+
+            this.flushBlockquote(); // Line not quoted, so flush
 
 
             // Line: ---

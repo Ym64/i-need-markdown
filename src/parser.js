@@ -1,4 +1,5 @@
 import { InlineParser } from "./inline_parser.js";
+import {Tokenizer} from "./tokenizer.js";
 
 export class Parser {
 
@@ -58,6 +59,16 @@ export class Parser {
                     language: token.language,
                     lines: token.lines
                 };
+
+            case "BLOCK_QUOTE": {
+                const lines = token.lines.join("\n");
+                const tokens = new Tokenizer().tokenize(lines);
+
+                return {
+                    type: "BLOCK_QUOTE",
+                    children: tokens.map(token => this.parseToken(token))
+                };
+            }
 
             default:
                 throw new Error(`Unknown token type: ${token.type}`);
