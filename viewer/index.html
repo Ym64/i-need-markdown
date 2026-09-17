@@ -41,7 +41,8 @@
         body {
             margin: 0;
             width: 100%;
-            height: 100vh;
+            height: 100%;
+            overflow: hidden;
             font-family: Arial, sans-serif;
             background: var(--bg);
             color: var(--text);
@@ -82,12 +83,14 @@
             display: flex;
             flex: 1;
             min-height: 0;
+            overflow: hidden;
         }
 
         .input-container,
         .output-container {
             width: 50%;
             min-height: 0;
+            overflow: hidden;
         }
 
         .input-container {
@@ -113,38 +116,61 @@
         }
 
         .output-container {
+            padding: 20px;
             display: flex;
             flex-direction: column;
             min-height: 0;
         }
 
-        .output-preview {
-            flex: 1;
-            min-height: 0;
-            padding: 20px;
-            overflow-y: auto;
-            border-bottom: 1px solid var(--border);
+        .control-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
         }
 
-        #preview {
+        #output-toggle {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            background: rgb(89 89 89 / 0.8);
+            color: white;
+            transition: background 0.2s;
+        }
+
+        #output-toggle:hover {
+            background: rgb(89 89 89 / 0.5);
+        }
+
+        .output-preview, .output-html {
+            flex: 1;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .output-preview {
+            display: block;
             background-color: var(--panel);
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
+            overflow-y: auto;
         }
 
         .output-html {
-            height: 40%;
+            display: none;
             padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            background-color: var(--panel);
             overflow-y: auto;
             font-family: monospace;
             white-space: pre-wrap;
         }
 
         #html-output {
-            background-color: var(--panel);
-            border-radius: 10px;
-            padding: 20px;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
@@ -192,6 +218,28 @@
         .inmd-hyperlink:active {
             color: var(--link);
         }
+
+        .inmd-blockquote {
+            margin: 1rem 0;
+            padding: 0.25rem 1rem;
+
+            border-left: 4px solid currentColor;
+
+            color: rgba(128, 128, 128, 0.95);
+            background: rgba(128, 128, 128, 0.08);
+        }
+
+        .inmd-blockquote > :first-child {
+            margin-top: 0;
+        }
+
+        .inmd-blockquote > :last-child {
+            margin-bottom: 0;
+        }
+
+        .inmd-blockquote .inmd-blockquote {
+            margin-left: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -232,26 +280,28 @@ Heck you can even **_`combine`_** all of them!
 
 Oh yeah, [links](https://ymanu.dev) and [mails](me@ymanu.dev) work too! Even automatically: https://ymanu.dev/
 
-
-
 Code blocks also exist:
 ```javascript
 function gekoloniseerd() {
     console.log("Hello World!");
 }
 ```
-**Please note** that this viewer uses [highlight.js](https://highlightjs.org/) for syntax highlighting.</textarea>
+**Please note** that this viewer uses [highlight.js](https://highlightjs.org/) for syntax highlighting.
+
+
+> ***Insert inspiring quote***
+> > ***Quit... Don't quit... NOODLES***</textarea>
     </div>
 
     <div class="output-container">
-
+        <div class="control-panel">
+            <h3 id="output-title">Preview</h3>
+            <button id="output-toggle">View HTML</button>
+        </div>
         <div class="output-preview">
-            <h3>Preview</h3>
             <div id="preview"></div>
         </div>
-
         <div class="output-html">
-            <h3>Generated HTML</h3>
             <pre id="html-output"></pre>
         </div>
 
@@ -261,7 +311,7 @@ function gekoloniseerd() {
 
 <script type="module">
 
-    import {parse} from "https://esm.sh/i-need-markdown";
+    import { parse } from "https://esm.sh/i-need-markdown";
 
     const input = document.getElementById("markdown-input");
     const preview = document.getElementById("preview");
@@ -297,6 +347,38 @@ function gekoloniseerd() {
             themeButton.textContent = "🌙 Dark Mode"
         }
 
+    });
+
+    const outputToggleButton = document.getElementById("output-toggle");
+    const outputTitle = document.getElementById("output-title");
+    let currentToggle = "PREVIEW";
+
+    outputToggleButton.addEventListener("click", () => {
+        if (currentToggle === "HTML") {
+            document.querySelectorAll(".output-html").forEach(outputHtml => {
+                outputHtml.style.display = "none";
+            })
+
+            document.querySelectorAll(".output-preview").forEach(outputHtml => {
+                outputHtml.style.display = "block";
+            })
+
+            currentToggle = "PREVIEW";
+            outputTitle.innerText = "Preview"
+            outputToggleButton.innerText = "View HTML"
+        } else {
+            document.querySelectorAll(".output-html").forEach(outputHtml => {
+                outputHtml.style.display = "block";
+            })
+
+            document.querySelectorAll(".output-preview").forEach(outputHtml => {
+                outputHtml.style.display = "none";
+            })
+
+            currentToggle = "HTML";
+            outputTitle.innerText = "HTML"
+            outputToggleButton.innerText = "View MD"
+        }
     });
 
 </script>
