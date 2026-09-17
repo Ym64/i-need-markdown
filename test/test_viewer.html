@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Markdown Parser Test</title>
+
+    <link href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" rel="stylesheet"/>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            scrollbar-width: thin;
+        }
+
+        :root {
+            --bg: #151515;
+            --text: rgb(186 184 179);
+            --panel: rgba(255 255 255 / 0.03);
+            --border: #444;
+            --link: #0080ff;
+            --inline-code: rgb(128 128 128 / 0.5);
+            --header-bg: #000;
+        }
+
+        [data-theme="light"] {
+            --bg: #f8f9fb;
+            --text: #1f2937;
+            --panel: rgba(0 0 0 / 0.05);
+            --border: #d1d5db;
+            --link: #0066cc;
+            --inline-code: rgba(0 0 0 / 0.1);
+            --header-bg: #3c3c3c;
+        }
+
+        html,
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            flex-shrink: 0;
+
+            background-color: var(--header-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 4px 30px;
+            color: #fff;
+        }
+
+        #theme-toggle {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transition: background 0.2s;
+        }
+
+        #theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .input-container,
+        .output-container {
+            width: 50%;
+            min-height: 0;
+        }
+
+        .input-container {
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        #markdown-input {
+            flex: 1;
+            min-height: 0;
+            border: none;
+            outline: none;
+            resize: none;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            border-radius: 10px;
+            background-color: var(--panel);
+            color: var(--text);
+        }
+
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .output-preview {
+            flex: 1;
+            min-height: 0;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #preview {
+            background-color: var(--panel);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .output-html {
+            height: 40%;
+            padding: 20px;
+            overflow-y: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        #html-output {
+            background-color: var(--panel);
+            border-radius: 10px;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        h3 {
+            margin: 0;
+            padding-bottom: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: white;
+        }
+
+        .devicon-github-original {
+            font-size: 1.5em;
+        }
+
+        .icon {
+        }
+
+        .inmd-inline-code {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background-color: var(--inline-code);
+            border-radius: 6px;
+            padding: 4px 12px;
+            margin: 0 4px;
+        }
+
+        .inmd-hyperlink {
+            color: var(--link);
+        }
+
+        .inmd-hyperlink:active {
+            color: var(--link);
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>I Need Markdown – Viewer</h2>
+    <div class="buttons">
+        <a class="icon" href="https://github.com/Ym64/i-need-markdown" target="_blank"><i
+                class="devicon-github-original"></i></a>
+        <button id="theme-toggle">️☀️ Light Mode</button>
+    </div>
+</div>
+<div class="container">
+    <div class="input-container">
+        <h3>Markdown Input</h3>
+        <label for="markdown-input"></label><textarea id="markdown-input">
+# Hello World
+
+This is a paragraph.
+
+---
+
+## Shopping List
+
+- Apples
+- Bananas
+- Oranges
+
+1. First
+2. Second
+3. Third
+
+Code snippets work: `print("Hello world!")`
+
+You can als use **bold**, _italic_, ~~strike through~~ or __underline__ text!
+
+Heck you can even **_`combine`_** all of them!
+
+Oh yeah, [links](https://ymanu.dev) work too! https://google.com/
+
+[![NPM Version](https://img.shields.io/npm/v/i-need-markdown)](https://www.npmjs.com/package/i-need-markdown)
+</textarea>
+    </div>
+
+    <div class="output-container">
+
+        <div class="output-preview">
+            <h3>Preview:</h3>
+            <hr>
+            <div id="preview"></div>
+        </div>
+
+        <div class="output-html">
+            <h3>Generated HTML</h3>
+            <pre id="html-output"></pre>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module">
+
+    import {parse} from "../src/index.js";
+
+    const input = document.getElementById("markdown-input");
+    const preview = document.getElementById("preview");
+    const htmlOutput = document.getElementById("html-output");
+
+    function render() {
+        const markdown = input.value;
+
+        const html = parse(markdown);
+
+        preview.innerHTML = html;
+        htmlOutput.textContent = html;
+    }
+
+    input.addEventListener("input", render);
+
+    render();
+
+    const themeButton = document.getElementById("theme-toggle");
+
+    themeButton.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+
+        if (current === "light") {
+            document.documentElement.removeAttribute("data-theme"); // default to dark theme
+            themeButton.textContent = "☀️ Light Mode"
+        } else {
+            document.documentElement.setAttribute("data-theme", "light");
+            themeButton.textContent = "🌙 Dark Mode"
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
