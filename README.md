@@ -1,4 +1,4 @@
-# I Need Markdown ![NPM Version](https://img.shields.io/npm/v/i-need-markdown)
+# I Need Markdown [![NPM Version](https://img.shields.io/npm/v/i-need-markdown)](https://www.npmjs.com/package/i-need-markdown)
 
 
 I Need Markdown is a simple, lightweight tool which turns markdown into html.
@@ -28,7 +28,7 @@ import { parse } from "https://esm.sh/i-need-markdown@<version>";
 const html = parse("# Hello World!");
 console.log(html);
 ```
-Replace `<version>` with the latest package version (![NPM Version](https://img.shields.io/npm/v/i-need-markdown))
+Replace `<version>` with the latest package version ([![NPM Version](https://img.shields.io/npm/v/i-need-markdown)](https://www.npmjs.com/package/i-need-markdown))
 
 ---
 
