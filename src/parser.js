@@ -48,6 +48,16 @@ export class Parser {
                     }))
                 };
 
+            case "TASK_LIST":
+                return {
+                    type: "TASK_LIST",
+                    children: token.items.map(item => ({
+                        type: "TASK_LIST_ITEM",
+                        checked: item.checked,
+                        children: this.inlineParser.parse(item.text)
+                    }))
+                }
+
             case "HORIZONTAL_RULE":
                 return {
                     type: "HORIZONTAL_RULE"

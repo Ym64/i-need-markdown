@@ -55,6 +55,12 @@ export class Renderer {
             case "LIST_ITEM":
                 return `<li class="inmd-list-item">${node.children.map(c => this.render(c)).join("")}</li>`;
 
+            case "TASK_LIST":
+                return `<ul class="inmd-task-list" style="list-style: none;">${node.children.map(c => this.render(c)).join("\n    ")}</ul>`
+
+            case "TASK_LIST_ITEM":
+                return `<li class="inmd-task-list-item"><input class="inmd-task-checkbox" type="checkbox" disabled ${node.checked ? "checked" : ""}><span class="inmd-task-label"> ${node.children.map(c => this.render(c)).join("")}</span></li>`
+
             default:
                 throw new Error(`Unknown node type: ${node.type}`);
         }

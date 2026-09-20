@@ -14,12 +14,15 @@ export class Tokenizer {
         this.listItems = [];
         this.listType = null;
 
+        this.taskItems = [];
+
         this.lines = [];
     }
 
     flushAll() {
         this.flushParagraph();
         this.flushList();
+        this.flushTaskList();
         this.flushBlockquote();
     }
 
@@ -63,6 +66,19 @@ export class Tokenizer {
             this.listItems = [];
             this.listType = null;
         }
+    }
+
+    flushTaskList() {
+        if (this.taskItems.length === 0) {
+            return;
+        }
+
+        this.tokens.push({
+            type: "TASK_LIST",
+            items: this.taskItems
+        });
+
+        this.taskItems = [];
     }
 
     flushCodeBlock() {
@@ -126,8 +142,9 @@ export class Tokenizer {
             this.flushBlockquote(); // Line not quoted, so flush
 
 
-            // Line: ---
-            if (line.trim().match("---")) {
+            // Line: ---, ***, ___
+
+            if (line.trim() === "---" || line.trim() === "___" || line.trim() === "***") {
                 this.flushAll();
 
                 this.tokens.push({
@@ -153,11 +170,27 @@ export class Tokenizer {
                 continue;
             }
 
+            // Task list:
+            // "- [ ] something" for undone,
+            // "- [x] something" for done
+            const taskMatch = line.match(/^[-*]\s+\[([ xX])]\s?(.*)$/);
+            if (taskMatch) {
+                this.flushParagraph();
+                this.flushList();
+
+                this.taskItems.push({
+                    checked: taskMatch[1].toLowerCase() === "x",
+                    text: taskMatch[2]
+                });
+
+                continue;
+            }
 
             // Unordered list: "- something" or "* something"
             const unorderedMatch = line.match(/^[-*]\s+(.*)$/);
             if (unorderedMatch) {
                 this.flushParagraph();
+                this.flushTaskList();
 
                 if (this.listType !== "UNORDERED") {
                     this.flushList();
@@ -173,6 +206,7 @@ export class Tokenizer {
             const orderedMatch = line.match(/^(\d+)\.\s+(.*)$/);
             if (orderedMatch) {
                 this.flushParagraph();
+                this.flushTaskList();
 
                 if (this.listType !== "ORDERED") {
                     this.flushList();
