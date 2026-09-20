@@ -140,6 +140,28 @@ export class InlineParser {
                 }
             }
 
+            // Super script ^
+            if (this.startsWith("^")) {
+                const node = this.parseDelimited("^", "SUPER_SCRIPT");
+
+                if (node) {
+                    flushText();
+                    nodes.push(node);
+                    continue;
+                }
+            }
+
+            // Sub script ~
+            if (this.startsWith("~")) {
+                const node = this.parseDelimited("~", "SUB_SCRIPT");
+
+                if (node) {
+                    flushText();
+                    nodes.push(node);
+                    continue;
+                }
+            }
+
             // Auto hyperlink
             const automaticLink = this.parseAutomaticLink();
             if (automaticLink) {

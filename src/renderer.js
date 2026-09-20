@@ -28,6 +28,12 @@ export class Renderer {
             case "STRIKE_THROUGH":
                 return `<s class="inmd-strike-through">${node.children.map(c => this.render(c)).join("")}</s>`
 
+            case "SUPER_SCRIPT":
+                return `<sup class="inmd-superscript">${node.children.map(c => this.render(c)).join("")}</sup>`
+
+            case "SUB_SCRIPT":
+                return `<sub class="inmd-subscript">${node.children.map(c => this.render(c)).join("")}</sub>`
+
             case "HORIZONTAL_RULE":
                 return `<hr class="inmd-horizontal-rule">`
 
